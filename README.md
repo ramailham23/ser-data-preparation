@@ -13,19 +13,10 @@ The system automates the tedious process of preparing raw multimedia data for ma
 **Why an automated pipeline?**
 Building a robust SER dataset requires precise temporal clipping and standardized labeling. By leveraging Whisper AI for automatic transcription and timestamp extraction, this pipeline eliminates manual audio slicing. It also seamlessly integrates human-in-the-loop validation (via Google Forms and Fleiss' Kappa analysis) before feeding the cleaned acoustic features into neural networks.
 
-### Architecture
+### System Architecture & Pipeline Flow
+![System Architecture Diagram](Projectdiagram.jpeg)
 
-```mermaid
-flowchart TD
-    A["Raw Video/Audio"] -->|Whisper AI / SRT| B["STEP 1<br/>Trimming"]
-    B -->|Clipped Audio| C["STEP 2<br/>Form Preparation"]
-    C -->|Script execution| D["STEP 3<br/>GForm Maker (JS)"]
-    D -->|Annotator feedback| E["STEP 4<br/>Fleiss' Kappa Analysis"]
-    E -->|Valid Dataset| F["STEP 5<br/>Acoustic Filter & Extraction"]
-    F -->|MFCCs / Spectrograms| G[("Standardized<br/>SER Dataset")]
-    G --> H["Training 1<br/>1D CNN"]
-    G --> I["Training 2<br/>LSTM"]
-```
+> *Comprehensive system flowchart illustrating the end-to-end process from raw film dataset preparation, acoustic filtering, feature extraction, model training, up to real-time deployment on Raspberry Pi.*
 
 ---
 
@@ -37,6 +28,20 @@ flowchart TD
 - **STEP 4: Annotator Agreement (Fleiss' Kappa)** — Statistically evaluates the reliability and consistency of human emotion labels using Fleiss' Kappa analysis.
 - **STEP 5: Acoustic Filtering & Feature Extraction** — Cleans the audio signals and extracts vital acoustic features (e.g., MFCCs) required for model training.
 - **Deep Learning Models** — Includes complete training and evaluation pipelines for both **1D Convolutional Neural Networks (1D CNN)** and **Long Short-Term Memory (LSTM)** networks.
+
+---
+
+## 📈 Model Training Results & Evaluation
+
+### 1. 1D Convolutional Neural Network (1D-CNN)
+![1D-CNN Training Result](94CNNResult.jpeg)
+
+> **Training Result:** The 1D-CNN model achieved an outstanding validation accuracy of **94.13%** (with a macro F1-Score of 0.9413), demonstrating stable convergence and excellent generalization across feature representations.
+
+### 2. Long Short-Term Memory (LSTM)
+![LSTM Training Result](89LSTMResult.jpeg)
+
+> **Training Result:** The Bidirectional LSTM model achieved a validation accuracy of **89.60%** (with a macro F1-Score of 0.8956), capturing temporal sequence dynamics while showing slight relative variance compared to the CNN architecture.
 
 ---
 
@@ -59,6 +64,9 @@ flowchart TD
 .
 ├── LICENSE
 ├── README.md
+├── Projectdiagram.jpeg          # System architecture and pipeline flowchart
+├── 94CNNResult.jpeg             # Training accuracy and loss curves for 1D-CNN (94.13%)
+├── 89LSTMResult.jpeg            # Training accuracy and loss curves for LSTM (89.60%)
 ├── STEP1_TrimmingMovie.ipynb      # Whisper & SRT-based clipping
 ├── STEP2_FormPreparation.ipynb    # Metadata prep for annotators
 ├── STEP3_GformMaker.js            # Apps Script to generate Google Forms
